@@ -424,4 +424,24 @@ abstract class AlternativeCacheStore extends TaggableStore
         $tags = new AlternativeTagSet($this, $names);
         return new AlternativeTaggedCache($this, $this->getPrefix(), $tags);
     }
+
+    /**
+     * Обновить время жизни (TTL) существующего ключа.
+     *
+     * @param  string  $key
+     * @param  int  $seconds
+     * @return bool
+     */
+    public function touch($key, $seconds)
+    {
+        // Используем оригинальный метод put, который уже есть в пакете
+        $value = $this->get($key);
+        
+        if ($value !== null) {
+            // Пересохраняем ключ с новым TTL, не меняя значение
+            return $this->put($key, $value, $seconds);
+        }
+        
+        return false;
+    }
 }
